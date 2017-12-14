@@ -1,0 +1,124 @@
+//  Created by xhu on 28/07/17.
+
+import Foundation
+
+struct NFAState<AttachedType, InputType> where InputType : Hashable {
+    var transitions: [InputType : [Int]] = [:]
+    var epsilons: [Int] = []
+    var data: AttachedType? = nil
+}
+
+struct Edge<T> {
+    var from: Int
+    var to: Int
+    var input: T
+}
+
+extension Edge {
+    func shift(offset: Int) -> Edge {
+        return Edge(from: from + offset, to: to + offset, input: input)
+    }
+}
+
+class NFA<AttachedType, InputType> where InputType : Hashable {
+    
+    var states: [NFAState<AttachedType, InputType>] = []
+    var initial: Int
+    var finals: [Int]
+    
+    var captures: [[Edge<InputType>]] = []
+    
+    init(_ input: InputType) {
+        states = [NFAState(), NFAState()]
+        initial = 0
+        finals = [1]
+        transition(from: 0, to: 1, with: input)
+    }
+    
+    init() {
+        initial = -1
+        finals = []
+    }
+    
+    func epsilon(from: Int, to: Int) {
+        var fromState = states[from]
+        fromState.epsilons.append(to)
+        states[from] = fromState
+    }
+    
+    func newState() -> Int {
+        let ns = NFAState<AttachedType, InputType>()
+        states.append(ns)
+        return states.count - 1
+    }
+    
+    func transition(from: Int, to: Int, with input: InputType) {
+        var fromState = states[from]
+        if fromState.transitions[input] == nil {
+            fromState.transitions[input] = []
+        }
+        fromState.transitions[input]!.append(to)
+        states[from] = fromState
+    }
+    
+    func shift(offset: Int) {
+        initial += offset
+        finals = finals.map { $0 + offset }
+        captures = captures.map { $0.map { $0.shift(offset: offset) } }
+        states = states.map {
+            var newState = $0
+            newState.transitions = newState.transitions.mapValues { $0.map { $0 + offset } }
+            newState.epsilons = newState.epsilons.map { $0 + offset }
+            return newState
+        }
+    }
+}
+
+extension NFA: Automata {
+    var size: Int {
+        return states.count
+    }
+    
+    var transitions: [(input: String, from: Int, to: Int)] {
+        var all = [(input: String, from: Int, to: Int)]()
+        for i in 0..<size {
+            let state = states[i]
+            for (input, dests) in state.transitions {
+                let trans = dests.map { (input: "\(input)", from: i, to: $0) }
+                all.append(contentsOf: trans)
+            }
+
+            all.append(contentsOf: state.epsilons.map { (input: "ε", from: i, to: $0) })
+        }
+        return all
+    }
+    
+}
+
+extension NFA {
+    class func merge(_ nfas: NFA<AttachedType, InputType>...) -> NFA<AttachedType, InputType> {
+        return _merge(nfas)
+    }
+    
+    class func merge(_ nfas: [NFA<AttachedType, InputType>]) -> NFA<AttachedType, InputType> {
+        return _merge(nfas)
+    }
+}
+
+private func _merge<AttachedType, InputType>(_ nfas: [NFA<AttachedType, InputType>]) -> NFA<AttachedType, InputType> {
+    let root = NFA<AttachedType, InputType>()
+    root.initial = root.newState()
+    for nfa in nfas {
+        nfa.shift(offset: root.size)
+        root.states += nfa.states
+        root.finals += nfa.finals
+        root.epsilon(from: root.initial, to: nfa.initial)
+        while root.captures.count < nfa.captures.count {
+            root.captures.append([])
+        }
+        for (i, c) in nfa.captures.enumerated() {
+            root.captures[i].append(contentsOf: c)
+        }
+    }
+    return root
+}
