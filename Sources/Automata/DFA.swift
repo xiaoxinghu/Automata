@@ -9,7 +9,7 @@ public struct DFAState<AttachedType, InputType> where InputType : Hashable {
     public var captures: [Int : Int] = [:]
 }
 
-public class DFA<AttachedType, InputType> where InputType : Hashable {
+open class DFA<AttachedType, InputType> where InputType : Hashable {
     
     public var states: [DFAState<AttachedType, InputType>] = []
     public var initial: Int = 0

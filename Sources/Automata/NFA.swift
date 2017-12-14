@@ -26,7 +26,7 @@ extension Edge {
     }
 }
 
-public class NFA<AttachedType, InputType> where InputType : Hashable {
+open class NFA<AttachedType, InputType> where InputType : Hashable {
     
     public var states: [NFAState<AttachedType, InputType>] = []
     public var initial: Int
