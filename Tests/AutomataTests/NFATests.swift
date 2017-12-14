@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Automata
+import Automata
 
 class NFATests: XCTestCase {
     

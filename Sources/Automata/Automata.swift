@@ -12,7 +12,7 @@ protocol Automata {
 }
 
 extension Automata {
-    func graphviz() -> String {
+    public func graphviz() -> String {
         var nodes = [String]()
         var trans = [String]()
         

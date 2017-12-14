@@ -2,25 +2,25 @@
 
 import Foundation
 
-struct DFAState<AttachedType, InputType> where InputType : Hashable {
-    var transitions: [InputType : Int] = [:]
-    var isEnd: Bool = false
-    var data: AttachedType? = nil
-    var captures: [Int : Int] = [:]
+public struct DFAState<AttachedType, InputType> where InputType : Hashable {
+    public var transitions: [InputType : Int] = [:]
+    public var isEnd: Bool = false
+    public var data: AttachedType? = nil
+    public var captures: [Int : Int] = [:]
 }
 
-class DFA<AttachedType, InputType> where InputType : Hashable {
+public class DFA<AttachedType, InputType> where InputType : Hashable {
     
-    var states: [DFAState<AttachedType, InputType>] = []
-    var initial: Int = 0
+    public var states: [DFAState<AttachedType, InputType>] = []
+    public var initial: Int = 0
     
-    func transition(from: Int, to: Int, with input: InputType) {
+    public func transition(from: Int, to: Int, with input: InputType) {
         var fromState = states[from]
         fromState.transitions[input] = to
         states[from] = fromState
     }
     
-    func newState() -> Int {
+    public func newState() -> Int {
         states.append(DFAState())
         return states.count - 1
     }

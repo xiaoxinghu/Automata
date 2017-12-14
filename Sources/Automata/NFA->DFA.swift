@@ -39,7 +39,7 @@ extension NFA {
         return Array(Set(allInputs))
     }
     
-    func toDFA() -> DFA<AttachedType, InputType> {
+    public func toDFA() -> DFA<AttachedType, InputType> {
         var stateMap = [Set(epsClosure(initial))]
         let dfa = DFA<AttachedType, InputType>()
         var unmarked = [dfa.initial]
