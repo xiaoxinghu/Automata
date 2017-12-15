@@ -1,2 +1,4 @@
 * Automata
 
+A minimal State Machine.
+
