@@ -81,11 +81,11 @@ open class NFA<AttachedType, InputType> where InputType : Hashable {
 }
 
 extension NFA: Automata {
-    var size: Int {
+    public var size: Int {
         return states.count
     }
     
-    var transitions: [(input: String, from: Int, to: Int)] {
+    public var transitions: [(input: String, from: Int, to: Int)] {
         var all = [(input: String, from: Int, to: Int)]()
         for i in 0..<size {
             let state = states[i]

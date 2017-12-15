@@ -27,15 +27,15 @@ open class DFA<AttachedType, InputType> where InputType : Hashable {
 }
 
 extension DFA: Automata {
-    var finals: [Int] {
+    public var finals: [Int] {
         return states.enumerated().filter { $0.element.isEnd }.map { $0.offset }
     }
     
-    var size: Int {
+    public var size: Int {
         return states.count
     }
     
-    var transitions: [(input: String, from: Int, to: Int)] {
+    public var transitions: [(input: String, from: Int, to: Int)] {
         var all = [(input: String, from: Int, to: Int)]()
         for i in 0..<size {
             let trans = states[i].transitions.map { (input: "\($0.key)", from: i, to: $0.value) }

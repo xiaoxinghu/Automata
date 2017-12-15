@@ -2,7 +2,7 @@
 
 import Foundation
 
-protocol Automata {
+public protocol Automata {
 
     var transitions: [(input: String, from: Int, to: Int)] { get }
     var initial: Int { get }
