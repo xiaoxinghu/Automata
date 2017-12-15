@@ -2,16 +2,22 @@
 
 import Foundation
 
-struct NFAState<AttachedType, InputType> where InputType : Hashable {
-    var transitions: [InputType : [Int]] = [:]
-    var epsilons: [Int] = []
-    var data: AttachedType? = nil
+public struct NFAState<AttachedType, InputType> where InputType : Hashable {
+    public var transitions: [InputType : [Int]] = [:]
+    public var epsilons: [Int] = []
+    public var data: AttachedType? = nil
 }
 
-struct Edge<T> {
-    var from: Int
-    var to: Int
-    var input: T
+public struct Edge<T> {
+    public var from: Int
+    public var to: Int
+    public var input: T
+    
+    public init(from: Int, to: Int, input: T) {
+        self.from = from
+        self.to = to
+        self.input = input
+    }
 }
 
 extension Edge {
@@ -20,39 +26,39 @@ extension Edge {
     }
 }
 
-class NFA<AttachedType, InputType> where InputType : Hashable {
+open class NFA<AttachedType, InputType> where InputType : Hashable {
     
-    var states: [NFAState<AttachedType, InputType>] = []
-    var initial: Int
-    var finals: [Int]
+    public var states: [NFAState<AttachedType, InputType>] = []
+    public var initial: Int
+    public var finals: [Int]
     
-    var captures: [[Edge<InputType>]] = []
+    public var captures: [[Edge<InputType>]] = []
     
-    init(_ input: InputType) {
+    public init(_ input: InputType) {
         states = [NFAState(), NFAState()]
         initial = 0
         finals = [1]
         transition(from: 0, to: 1, with: input)
     }
     
-    init() {
+    public init() {
         initial = -1
         finals = []
     }
     
-    func epsilon(from: Int, to: Int) {
+    public func epsilon(from: Int, to: Int) {
         var fromState = states[from]
         fromState.epsilons.append(to)
         states[from] = fromState
     }
     
-    func newState() -> Int {
+    public func newState() -> Int {
         let ns = NFAState<AttachedType, InputType>()
         states.append(ns)
         return states.count - 1
     }
     
-    func transition(from: Int, to: Int, with input: InputType) {
+    public func transition(from: Int, to: Int, with input: InputType) {
         var fromState = states[from]
         if fromState.transitions[input] == nil {
             fromState.transitions[input] = []
@@ -61,7 +67,7 @@ class NFA<AttachedType, InputType> where InputType : Hashable {
         states[from] = fromState
     }
     
-    func shift(offset: Int) {
+    public func shift(offset: Int) {
         initial += offset
         finals = finals.map { $0 + offset }
         captures = captures.map { $0.map { $0.shift(offset: offset) } }
@@ -75,11 +81,11 @@ class NFA<AttachedType, InputType> where InputType : Hashable {
 }
 
 extension NFA: Automata {
-    var size: Int {
+    public var size: Int {
         return states.count
     }
     
-    var transitions: [(input: String, from: Int, to: Int)] {
+    public var transitions: [(input: String, from: Int, to: Int)] {
         var all = [(input: String, from: Int, to: Int)]()
         for i in 0..<size {
             let state = states[i]
@@ -96,11 +102,11 @@ extension NFA: Automata {
 }
 
 extension NFA {
-    class func merge(_ nfas: NFA<AttachedType, InputType>...) -> NFA<AttachedType, InputType> {
+    public class func merge(_ nfas: NFA<AttachedType, InputType>...) -> NFA<AttachedType, InputType> {
         return _merge(nfas)
     }
     
-    class func merge(_ nfas: [NFA<AttachedType, InputType>]) -> NFA<AttachedType, InputType> {
+    public class func merge(_ nfas: [NFA<AttachedType, InputType>]) -> NFA<AttachedType, InputType> {
         return _merge(nfas)
     }
 }

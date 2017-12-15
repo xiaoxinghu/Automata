@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Automata
+import Automata
 
 class NFATests: XCTestCase {
     
@@ -15,18 +15,9 @@ class NFATests: XCTestCase {
     }
     
     func testNFA() {
-        let nfas: [NFA<String, String>] = [NFA("H"), NFA("E"), NFA("L")]
-//        nfa = nfa.concat(NFA("E"))
-        let nfa = NFA<String, String>.merge(nfas)
-        
-        let dfa = nfa.toDFA()
-        let nfaGraph = nfa.graphviz()
-        try! nfaGraph.write(toFile: "/Users/xhu/Documents/nfa.dot", atomically: false, encoding: .utf8)
-        
-        let dfaGraph = dfa.graphviz()
-        try! dfaGraph.write(toFile: "/Users/xhu/Documents/dfa.dot", atomically: false, encoding: .utf8)
-
-        
     }
     
+    static var allTests = [
+        ("testNFA", testNFA),
+        ]
 }

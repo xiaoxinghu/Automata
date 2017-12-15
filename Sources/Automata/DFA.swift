@@ -2,40 +2,40 @@
 
 import Foundation
 
-struct DFAState<AttachedType, InputType> where InputType : Hashable {
-    var transitions: [InputType : Int] = [:]
-    var isEnd: Bool = false
-    var data: AttachedType? = nil
-    var captures: [Int : Int] = [:]
+public struct DFAState<AttachedType, InputType> where InputType : Hashable {
+    public var transitions: [InputType : Int] = [:]
+    public var isEnd: Bool = false
+    public var data: AttachedType? = nil
+    public var captures: [Int : Int] = [:]
 }
 
-class DFA<AttachedType, InputType> where InputType : Hashable {
+open class DFA<AttachedType, InputType> where InputType : Hashable {
     
-    var states: [DFAState<AttachedType, InputType>] = []
-    var initial: Int = 0
+    public var states = [DFAState<AttachedType, InputType>()]
+    public var initial: Int = 0
     
-    func transition(from: Int, to: Int, with input: InputType) {
+    public func transition(from: Int, to: Int, with input: InputType) {
         var fromState = states[from]
         fromState.transitions[input] = to
         states[from] = fromState
     }
     
-    func newState() -> Int {
+    public func newState() -> Int {
         states.append(DFAState())
         return states.count - 1
     }
 }
 
 extension DFA: Automata {
-    var finals: [Int] {
+    public var finals: [Int] {
         return states.enumerated().filter { $0.element.isEnd }.map { $0.offset }
     }
     
-    var size: Int {
+    public var size: Int {
         return states.count
     }
     
-    var transitions: [(input: String, from: Int, to: Int)] {
+    public var transitions: [(input: String, from: Int, to: Int)] {
         var all = [(input: String, from: Int, to: Int)]()
         for i in 0..<size {
             let trans = states[i].transitions.map { (input: "\($0.key)", from: i, to: $0.value) }
