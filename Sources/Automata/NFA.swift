@@ -2,10 +2,9 @@
 
 import Foundation
 
-public struct NFAState<AttachedType, InputType> where InputType : Hashable {
+public struct NFAState<InputType> where InputType : Hashable {
     public var transitions: [InputType : [Int]] = [:]
     public var epsilons: [Int] = []
-    public var data: AttachedType? = nil
 }
 
 public struct Edge<T> {
@@ -26,9 +25,9 @@ extension Edge {
     }
 }
 
-open class NFA<AttachedType, InputType> where InputType : Hashable {
+open class NFA<InputType> where InputType : Hashable {
     
-    public var states: [NFAState<AttachedType, InputType>] = []
+    public var states: [NFAState<InputType>] = []
     public var initial: Int
     public var finals: [Int]
     
@@ -53,7 +52,7 @@ open class NFA<AttachedType, InputType> where InputType : Hashable {
     }
     
     public func newState() -> Int {
-        let ns = NFAState<AttachedType, InputType>()
+        let ns = NFAState<InputType>()
         states.append(ns)
         return states.count - 1
     }
@@ -102,17 +101,17 @@ extension NFA: Automata {
 }
 
 extension NFA {
-    public class func merge(_ nfas: NFA<AttachedType, InputType>...) -> NFA<AttachedType, InputType> {
+    public class func merge(_ nfas: NFA<InputType>...) -> NFA<InputType> {
         return _merge(nfas)
     }
     
-    public class func merge(_ nfas: [NFA<AttachedType, InputType>]) -> NFA<AttachedType, InputType> {
+    public class func merge(_ nfas: [NFA<InputType>]) -> NFA<InputType> {
         return _merge(nfas)
     }
 }
 
-private func _merge<AttachedType, InputType>(_ nfas: [NFA<AttachedType, InputType>]) -> NFA<AttachedType, InputType> {
-    let root = NFA<AttachedType, InputType>()
+private func _merge<InputType>(_ nfas: [NFA<InputType>]) -> NFA<InputType> {
+    let root = NFA<InputType>()
     root.initial = root.newState()
     for nfa in nfas {
         nfa.shift(offset: root.size)

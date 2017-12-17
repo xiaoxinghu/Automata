@@ -39,9 +39,9 @@ extension NFA {
         return Array(Set(allInputs))
     }
     
-    public func toDFA() -> DFA<AttachedType, InputType> {
+    public func toDFA() -> DFA<InputType> {
         var stateMap = [Set(epsClosure(initial))]
-        let dfa = DFA<AttachedType, InputType>()
+        let dfa = DFA<InputType>()
         var unmarked = [dfa.initial]
 
         while let s = unmarked.popLast() {
@@ -51,7 +51,7 @@ extension NFA {
             let f = nfaStates.intersection(finals)
             if f.count > 0 {
                 dfa.states[s].isEnd = true
-                dfa.states[s].data = states[f.first!].data
+//                dfa.states[s].data = states[f.first!].data
             }
             
             for i in getAllInputs() {
