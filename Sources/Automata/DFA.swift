@@ -2,16 +2,16 @@
 
 import Foundation
 
-public struct DFAState<AttachedType, InputType> where InputType : Hashable {
+public struct DFAState<InputType> where InputType : Hashable {
     public var transitions: [InputType : Int] = [:]
     public var isEnd: Bool = false
-    public var data: AttachedType? = nil
     public var captures: [Int : Int] = [:]
+    public var traceId: Int = -1
 }
 
-open class DFA<AttachedType, InputType> where InputType : Hashable {
+open class DFA<InputType> where InputType : Hashable {
     
-    public var states = [DFAState<AttachedType, InputType>()]
+    public var states = [DFAState<InputType>()]
     public var initial: Int = 0
     
     public func transition(from: Int, to: Int, with input: InputType) {
