@@ -51,7 +51,7 @@ extension NFA {
             let f = nfaStates.intersection(finals)
             if f.count > 0 {
                 dfa.states[s].isEnd = true
-//                dfa.states[s].data = states[f.first!].data
+                dfa.states[s].traceId = states[f.first!].traceId
             }
             
             for i in getAllInputs() {

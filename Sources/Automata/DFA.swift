@@ -6,6 +6,7 @@ public struct DFAState<InputType> where InputType : Hashable {
     public var transitions: [InputType : Int] = [:]
     public var isEnd: Bool = false
     public var captures: [Int : Int] = [:]
+    public var traceId: Int = -1
 }
 
 open class DFA<InputType> where InputType : Hashable {

@@ -5,6 +5,7 @@ import Foundation
 public struct NFAState<InputType> where InputType : Hashable {
     public var transitions: [InputType : [Int]] = [:]
     public var epsilons: [Int] = []
+    public var traceId: Int = -1
 }
 
 public struct Edge<T> {
