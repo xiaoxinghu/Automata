@@ -5,13 +5,14 @@ import Foundation
 public struct DFAState<InputType> where InputType : Hashable {
     public var transitions: [InputType : Int] = [:]
     public var isEnd: Bool = false
-    public var captures: [Int : [Int]] = [:]
+    public var captures: [Int : Set<Int>] = [:]
     public var traceId: Int = -1
 }
 
 extension DFAState {
     mutating func capture(state: Int, group: Int) {
-        captures[state] = (captures[state] ?? []) + [group]
+        captures[state] = (captures[state] ?? [])
+        captures[state]?.insert(group)
     }
 }
 
