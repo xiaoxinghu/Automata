@@ -72,7 +72,7 @@ extension NFA {
                 for (g, edges) in captures.enumerated() {
                     for e in edges {
                         if nfaStates.contains(e.from) && nextStateSet.contains(e.to) {
-                            dfa.states[s].captures[nState] = g
+                            dfa.states[s].capture(state: nState, group: g)
                         }
                     }
                 }
